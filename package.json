@@ -6,7 +6,13 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"ts-node": "ts-node index.ts",
-    "2025-01-01": "ts-node 2025-01-01/index.ts"
+		"2025-01-01": "ts-node 2025-01-01/index.ts",
+		"2025-01-02": "ts-node 2025-01-02/index.ts",
+		"2025-01-03": "ts-node 2025-01-03/index.ts",
+		"2025-01-04": "ts-node 2025-01-04/index.ts",
+		"2025-01-05": "ts-node 2025-01-05/index.ts",
+		"2025-01-06": "ts-node 2025-01-06/index.ts",
+		"2025-01-07": "ts-node 2025-01-07/index.ts"
 	},
 	"keywords": [],
 	"author": "",
@@ -14,6 +20,6 @@
 	"dependencies": {
 		"ts-node": "^10.9.2",
 		"typescript": "^5.7.2",
-    "ts-node-dev": "^2.0.0"
+		"ts-node-dev": "^2.0.0"
 	}
 }

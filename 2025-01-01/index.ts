@@ -1,60 +1,62 @@
 /**
- * @author Michael Adesina
- * @brief This file contains a function to find the number of continuous subarrays
- *        in an array whose elements sum up to a given target value k.
+ * Groups an array of strings into sub-arrays, where each sub-array contains anagrams.
+ * Anagrams are words that contain the same characters, but possibly in a different order.
+ *
+ * @param strs An array of strings to be grouped.
+ * @returns A 2D array (array of arrays) where each inner array contains anagrams.
+ *          Returns an empty array if the input is null or empty.
+ *
+ * @example
+ * groupAnagrams(["act", "god", "cat", "dog", "tac"]) // Returns [["act", "cat", "tac"], ["god", "dog"]]
+ * groupAnagrams(["no", "on", "is"]) // Returns [["is"], ["no", "on"]]
+ * groupAnagrams([]) // Returns []
+ * groupAnagrams(["a"]) // Returns [["a"]]
+ *
+ * @Michael
  */
-
-/**
- * Finds the number of continuous subarrays in an array whose elements sum up to a given target value k.
- * @param nums The input array of numbers.
- * @param k The target sum.
- * @returns The number of subarrays with sum equal to k.
- * @timeComplexity O(n) - where n is the length of the input array.
- * @spaceComplexity O(n) - in the worst case, the hash map can store all prefix sums.
- */
-function subarraySum(nums: number[], k: number): number {
-	const sumMap = new Map<number, number>();
-	sumMap.set(0, 1); // Initialize with a sum of 0 occurring once
-
-	let currentSum = 0;
-	let count = 0;
-
-	for (const num of nums) {
-		currentSum += num;
-
-		const complement = currentSum - k;
-
-		if (sumMap.has(complement)) {
-			count += sumMap.get(complement)!; // Add the frequency of the complement
-		}
-
-		sumMap.set(currentSum, (sumMap.get(currentSum) || 0) + 1); // Update frequency of current sum
+function groupAnagrams(strs: string[]): string[][] {
+	// Handle null or empty input
+	if (!strs || strs.length === 0) {
+		return [];
 	}
 
-	return count;
+	// Create a map to store anagrams. The key is the sorted string (representing the anagram group),
+	// and the value is an array of strings that belong to that group.
+	const anagramMap: { [key: string]: string[] } = {};
+
+	// Iterate through each string in the input array
+	for (const str of strs) {
+		// Sort the string to create a unique key for anagrams
+		const sortedStr = str.split("").sort().join("");
+
+		// If the sorted string is not already a key in the map, create a new entry
+		if (!anagramMap[sortedStr]) {
+			anagramMap[sortedStr] = [];
+		}
+
+		// Add the original string to the list of anagrams for the corresponding key
+		anagramMap[sortedStr].push(str);
+	}
+
+	// Return an array of all the values (which are the arrays of anagrams) from the map
+	return Object.values(anagramMap);
 }
 
-// Test cases
-/**
- * @brief Test cases to verify the correctness of the subarraySum function.
- */
-const testCases = [
-	{ nums: [10, 2, -2, -20, 10], k: -10, expected: 3 },
-	{ nums: [9, 4, 20, 3, 10, 5], k: 33, expected: 2 },
-	{ nums: [1, 3, 5], k: 0, expected: 0 },
-	{ nums: [1, 1, 1], k: 2, expected: 2 },
-	{ nums: [1, 2, 3], k: 3, expected: 2 },
-	{ nums: [1], k: 1, expected: 1 },
-	{ nums: [1], k: 0, expected: 0 },
-	{ nums: [], k: 0, expected: 0 },
+// Test cases with more comprehensive examples.
+const testCases: (string[] | null)[] = [
+	["act", "god", "cat", "dog", "tac"],
+	["no", "on", "is"],
+	["listen", "silent", "enlist", "abc", "cab", "bac", "rat", "tar", "art"],
+	["", ""], // Test case with empty strings
+	["a"], // Test case with single character
+	["ddddddddddg", "dgggggggggg"], // Test case with repeated chars
+	[], // Test case with empty array
+	null, // Test case with null input
 ];
 
-testCases.forEach(({ nums, k, expected }, index) => {
-	const result = subarraySum(nums, k);
-	console.log(`Test Case ${index + 1}:`);
-	console.log(`Input: nums = [${nums}], k = ${k}`);
-	console.log(`Output: ${result}`);
-	console.log(`Expected: ${expected}`);
-	console.log(`Result is ${result === expected ? "Correct" : "Incorrect"}`);
+testCases.forEach((testCase) => {
+	const result = groupAnagrams(testCase ?? []);
+	console.log(`Input: ${JSON.stringify(testCase)}`);
+	console.log(`Output: ${JSON.stringify(result)}`);
 	console.log("---");
 });
