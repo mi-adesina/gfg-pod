@@ -40,7 +40,7 @@ const testCases: TestCase[] = [
     { arr: [1, 2, 3, 7, 5], target: 12, expected: [2, 4] },
     { arr: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], target: 15, expected: [1, 5] },
     { arr: [5, 3, 4], target: 2, expected: [-1] },
-    {arr: [1,2,3,7,5], target: 15, expected: [3,5]},
+    {arr: [1,2,3,7,5], target: 14, expected: [3,5]},
     {arr: [1,2,3,4,5], target: 1, expected: [1,1]},
     {arr: [1,2,3,4,5], target: 15, expected: [1,5]},
     {arr: [1,1,1,1,1], target: 5, expected: [1,5]},
