@@ -1,0 +1,116 @@
+class Solution {
+    /**
+     * Checks if the given word can be constructed from the characters in the 2D matrix.
+     * The word can be formed by moving to adjacent cells (horizontally or vertically)
+     * without reusing any cell.
+     *
+     * @param mat - A 2D array of characters (matrix).
+     * @param word - The word to search for in the matrix.
+     * @returns `true` if the word exists in the matrix, otherwise `false`.
+     */
+    exist(mat: string[][], word: string): boolean {
+        // Step 1: Count the frequency of each character in the matrix
+        const freq: { [key: string]: number } = {};
+        for (let row of mat) {
+            for (let c of row) {
+                freq[c] = (freq[c] || 0) + 1; // Increment the count for each character
+            }
+        }
+
+        // Step 2: Count the frequency of each character in the word
+        const wordFreq: { [key: string]: number } = {};
+        for (let c of word) {
+            wordFreq[c] = (wordFreq[c] || 0) + 1; // Increment the count for each character
+        }
+
+        // Step 3: Check if the matrix has enough characters to form the word
+        for (let c in wordFreq) {
+            if ((freq[c] || 0) < wordFreq[c]) {
+                return false; // If any character is insufficient, return false
+            }
+        }
+
+        const n: number = mat.length; // Number of rows in the matrix
+        const m: number = n > 0 ? mat[0].length : 0; // Number of columns in the matrix
+        const wordLen: number = word.length; // Length of the word
+
+        // Step 4: If the word is longer than the total number of cells, it's impossible
+        if (wordLen > n * m) {
+            return false;
+        }
+
+        // Step 5: Define possible directions to move (right, down, left, up)
+        const directions: [number, number][] = [
+            [0, 1],  // Right
+            [1, 0],  // Down
+            [0, -1], // Left
+            [-1, 0], // Up
+        ];
+
+        /**
+         * Recursive helper function to perform backtracking.
+         *
+         * @param i - Current row index in the matrix.
+         * @param j - Current column index in the matrix.
+         * @param index - Current index in the word being matched.
+         * @param visited - A 2D array to track visited cells.
+         * @returns `true` if the word can be formed starting from (i, j), otherwise `false`.
+         */
+        const backtrack = (i: number, j: number, index: number, visited: boolean[][]): boolean => {
+            // If the entire word is matched, return true
+            if (index === wordLen - 1) {
+                return true;
+            }
+
+            // Explore all four possible directions
+            for (let [dx, dy] of directions) {
+                const ni: number = i + dx; // New row index
+                const nj: number = j + dy; // New column index
+
+                // Check if the new indices are within bounds and the cell is not visited
+                if (ni >= 0 && ni < n && nj >= 0 && nj < m && !visited[ni][nj]) {
+                    // Check if the character in the new cell matches the next character in the word
+                    if (mat[ni][nj] === word[index + 1]) {
+                        visited[ni][nj] = true; // Mark the cell as visited
+                        // Recursively check the next character
+                        if (backtrack(ni, nj, index + 1, visited)) {
+                            return true;
+                        }
+                        visited[ni][nj] = false; // Backtrack (unmark the cell)
+                    }
+                }
+            }
+
+            // If no path is found, return false
+            return false;
+        };
+
+        // Step 6: Iterate through each cell in the matrix to start the search
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < m; j++) {
+                // If the current cell matches the first character of the word, start backtracking
+                if (mat[i][j] === word[0]) {
+                    const visited: boolean[][] = new Array(n).fill(false).map(() => new Array(m).fill(false)); // Initialize visited matrix
+                    visited[i][j] = true; // Mark the starting cell as visited
+                    // If the word can be formed starting from (i, j), return true
+                    if (backtrack(i, j, 0, visited)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Step 7: If no valid path is found, return false
+        return false;
+    }
+}
+
+// Example usage:
+const solution = new Solution();
+const mat: string[][] = [
+    ['T', 'E', 'E'],
+    ['S', 'G', 'K'],
+    ['T', 'E', 'L']
+];
+const word: string = "GEEK";
+console.log(solution.exist(mat, word)); // Output: true
